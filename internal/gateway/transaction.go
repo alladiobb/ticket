@@ -2,6 +2,6 @@ package gateway
 
 import "github.com/alladiobb/ticket/internal/entity"
 
-type Trasactiongateway interface {
+type TransactionGateway interface {
 	Create(transaction *entity.Transaction) error
 }
