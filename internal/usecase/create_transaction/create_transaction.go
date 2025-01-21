@@ -1,29 +1,34 @@
 package createtransaction
 
+import (
+	"github.com/alladiobb/ticket/internal/entity"
+	"github.com/alladiobb/ticket/internal/gateway"
+)
+
 type CreateTransactionInputDTO struct {
-	AccountIDfrom string
-	AccountIDTo string
-	Amount float64
+	AccountIDFrom string
+	AccountIDTo   string
+	Amount        float64
 }
 
 type CreateTransactionOutputDTO struct {
 	ID string
 }
 
-type CreateTransactionUseCase() struct {
-	TrasanctionGateway gateway.TransactionGateway
-	AccountGateway gateway.AccountGateway
+type CreateTransactionUseCase struct {
+	TransactionGateway gateway.TransactionGateway
+	AccountGateway     gateway.AccountGateway
 }
 
 func NewCreateTransactionUseCase(transactionGateway gateway.TransactionGateway, accountGateway gateway.AccountGateway) *CreateTransactionUseCase {
 	return &CreateTransactionUseCase{
 		TransactionGateway: transactionGateway,
-		AccountGateway: accountGateway,
+		AccountGateway:     accountGateway,
 	}
 }
 
 func (uc *CreateTransactionUseCase) Execute(input CreateTransactionInputDTO) (*CreateTransactionOutputDTO, error) {
-	accountFrom, err := uc.AccountGateway.FindByID(input.AccountIDfrom)
+	accountFrom, err := uc.AccountGateway.FindByID(input.AccountIDFrom)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +38,11 @@ func (uc *CreateTransactionUseCase) Execute(input CreateTransactionInputDTO) (*C
 		return nil, err
 	}
 
-	transaction := entity.NewTransaction(accountFrom, accountTo, input.Amount)
+	transaction, err := entity.NewTransaction(accountFrom, accountTo, input.Amount)
+	if err != nil {
+		return nil, err
+	}
+
 	err = uc.TransactionGateway.Create(transaction)
 	if err != nil {
 		return nil, err
