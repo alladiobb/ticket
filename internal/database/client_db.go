@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"log"
 
 	"github.com/alladiobb/ticket/internal/entity"
 )
@@ -36,10 +37,14 @@ func (c *ClientDB) Save(client *entity.Client) error {
 		return err
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(client.ID, client.Name, client.Email, client.CreatedAt)
+
+	result, err := stmt.Exec(client.ID, client.Name, client.Email, client.CreatedAt)
 	if err != nil {
-		return err
+		log.Fatalf("Erro ao salvar cliente: %v", err)
 	}
-	defer stmt.Close()
+	rowsAffected, _ := result.RowsAffected()
+	log.Printf("%d linhas inseridas", rowsAffected)
+	// defer stmt.Close()
+
 	return nil
 }
