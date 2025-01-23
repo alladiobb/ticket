@@ -29,7 +29,7 @@ func (s *AccountDBTestSuite) SetupSuite() {
 	s.client, _ = entity.NewClient("John Doe", "j@j.com")
 }
 
-func (s *AccountDBTestSuite) tearDownSuite() {
+func (s *AccountDBTestSuite) TearDownSuite() {
 	defer s.DB.Close()
 	s.DB.Exec("DROP TABLE clients")
 	s.DB.Exec("DROP TABLE accounts")
