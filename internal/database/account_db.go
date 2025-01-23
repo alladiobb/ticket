@@ -22,7 +22,7 @@ func (a *AccountDB) FindByID(id string) (*entity.Account, error) {
 	var client entity.Client
 	account.Client = &client
 
-	stmt, err := a.DB.Prepare("SELECT a.id, a.client_id, a.balance, a.created_at, c.ID, c.Name, c.Email, c.CreatedAt " +
+	stmt, err := a.DB.Prepare("SELECT a.id, a.client_id, a.balance, a.created_at, c.ID, c.Name, c.Email, c.Created_at " +
 		"FROM accounts a " +
 		"INNER JOIN clients c ON a.client_id = c.id " +
 		"WHERE a.id = ?")
